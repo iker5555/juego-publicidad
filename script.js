@@ -1,3 +1,4 @@
+
 // Elementos DOM
 const startBtn = document.getElementById('start-btn');
 const playerNameInput = document.getElementById('player-name');
@@ -243,3 +244,4 @@ function renderLeaderboard(data) {
     list.appendChild(div);
   });
 }
+
