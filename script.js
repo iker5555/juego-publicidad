@@ -35,7 +35,7 @@ const videos = [
   { src: 'videos/video1.mp4', correctAnswer: true, type: 'video' },
   { src: 'videos/video2.mp4', correctAnswer: false, type: 'video' },
   { src: 'videos/video3.mp4', correctAnswer: true, type: 'video' },
-  { src: 'images/final-image.jpg', correctAnswer: true, type: 'image' } // Última imagen
+  { src: 'images/final-image.jpg', correctAnswer: false, type: 'image' } // Última imagen
 ];
 
 // Función para mostrar solo una pantalla
