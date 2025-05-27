@@ -56,17 +56,20 @@ function showScreen(screen) {
 function loadVideo() {
   const currentMedia = videos[currentVideoIndex];
 
-  if (adVideo) {
-    adVideo.pause();
-    adVideo.currentTime = 0;
-  }
+  // Asegurarse de pausar cualquier video anterior
+  adVideo.pause();
+  adVideo.currentTime = 0; // Reiniciar al inicio del video
+
+  // Ocultar ambos para reiniciar visual
+  adVideo.style.display = 'none';
+  adImage.style.display = 'none';
 
   if (currentMedia.type === 'video') {
     adVideo.src = currentMedia.src;
     adVideo.style.display = 'block';
-    adImage.style.display = 'none';
     adVideo.load();
     adVideo.play();
+
     adVideo.onplay = () => {
       if (!timerRunning) {
         startTimer();
@@ -75,7 +78,8 @@ function loadVideo() {
   } else if (currentMedia.type === 'image') {
     adImage.src = currentMedia.src;
     adImage.style.display = 'block';
-    adVideo.style.display = 'none';
+
+    // Espera pequeña para asegurar que esté visible antes del timer
     setTimeout(() => {
       if (!timerRunning) {
         startTimer();
@@ -87,6 +91,8 @@ function loadVideo() {
   feedbackMessage.textContent = '';
 }
 
+
+  
 // Actualiza el visual del temporizador circular
 function updateTimerVisual(seconds) {
   timerText.textContent = seconds;
