@@ -22,29 +22,31 @@ const timerProgress = document.getElementById('timer-progress');
 
 let playerName = '';
 let score = 0;
-let currentVideoIndex = 0;
+let currentIndex = 0;
 let timer;
 let timerRunning = false;
 let timeLeft = 20;
 
 const TIMER_DURATION = 130;
 
-let videos = [
+const originalQuestions = [
   { src: 'videos/video1.mp4', correctAnswer: true, type: 'video' },
   { src: 'videos/video2.mp4', correctAnswer: false, type: 'video' },
   { src: 'videos/video3.mp4', correctAnswer: true, type: 'video' },
   { src: 'images/final-image.jpg', correctAnswer: false, type: 'image' }
 ];
 
-// Función para mezclar un arreglo (Fisher-Yates)
+let questions = [];
+
+// Función para mezclar las preguntas aleatoriamente
 function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
+  return array
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
 }
 
-// Función para mostrar solo una pantalla
+// Mostrar solo una pantalla
 function showScreen(screen) {
   nameScreen.classList.remove('active');
   gameScreen.classList.remove('active');
@@ -52,24 +54,19 @@ function showScreen(screen) {
   screen.classList.add('active');
 }
 
-// Cargar video o imagen actual
-function loadVideo() {
-  const currentMedia = videos[currentVideoIndex];
+// Cargar pregunta (video o imagen)
+function loadQuestion() {
+  const currentMedia = questions[currentIndex];
 
-  // Asegurarse de pausar cualquier video anterior
   adVideo.pause();
-  adVideo.currentTime = 0; // Reiniciar al inicio del video
-
-  // Ocultar ambos para reiniciar visual
-  adVideo.style.display = 'none';
-  adImage.style.display = 'none';
+  adVideo.currentTime = 0;
 
   if (currentMedia.type === 'video') {
     adVideo.src = currentMedia.src;
     adVideo.style.display = 'block';
+    adImage.style.display = 'none';
     adVideo.load();
     adVideo.play();
-
     adVideo.onplay = () => {
       if (!timerRunning) {
         startTimer();
@@ -78,8 +75,8 @@ function loadVideo() {
   } else if (currentMedia.type === 'image') {
     adImage.src = currentMedia.src;
     adImage.style.display = 'block';
+    adVideo.style.display = 'none';
 
-    // Espera pequeña para asegurar que esté visible antes del timer
     setTimeout(() => {
       if (!timerRunning) {
         startTimer();
@@ -91,9 +88,7 @@ function loadVideo() {
   feedbackMessage.textContent = '';
 }
 
-
-  
-// Actualiza el visual del temporizador circular
+// Temporizador circular
 function updateTimerVisual(seconds) {
   timerText.textContent = seconds;
   const circumference = 2 * Math.PI * 45;
@@ -101,7 +96,6 @@ function updateTimerVisual(seconds) {
   timerProgress.style.strokeDashoffset = offset;
 }
 
-// Temporizador
 function startTimer() {
   timeLeft = TIMER_DURATION;
   timerRunning = true;
@@ -148,18 +142,27 @@ function feedback(correct) {
   feedbackMessage.classList.add('show');
 }
 
-// Siguiente video o pantalla final
+// Ir a la siguiente pregunta
 function nextQuestion() {
-  currentVideoIndex++;
-  if (currentVideoIndex >= videos.length) {
+  adVideo.pause();
+  adVideo.currentTime = 0;
+
+  currentIndex++;
+  if (currentIndex >= questions.length) {
     showFinalScreen();
   } else {
-    loadVideo();
+    loadQuestion();
   }
 }
 
-// Pantalla final
+// Mostrar pantalla final
 function showFinalScreen() {
+  adVideo.pause();
+  adVideo.currentTime = 0;
+  adVideo.src = '';
+
+  pauseTimer();
+
   showScreen(endScreen);
   playerFinalName.textContent = playerName;
   finalScore.textContent = score;
@@ -172,7 +175,7 @@ function handleAnswer(answer) {
 
   pauseTimer();
 
-  const correct = videos[currentVideoIndex].correctAnswer === answer;
+  const correct = questions[currentIndex].correctAnswer === answer;
   if (correct) {
     let points = 1;
     const bonus = Math.floor((timeLeft / TIMER_DURATION) * 2);
@@ -190,7 +193,6 @@ function handleAnswer(answer) {
 }
 
 // Eventos
-
 startBtn.addEventListener('click', () => {
   const name = playerNameInput.value.trim();
   if (name === '') {
@@ -200,20 +202,13 @@ startBtn.addEventListener('click', () => {
 
   playerName = name;
   score = 0;
-  currentVideoIndex = 0;
+  currentIndex = 0;
+  questions = shuffleArray([...originalQuestions]);
   scoreDisplay.textContent = `Puntaje: ${score}`;
   playerDisplayName.textContent = `Jugador: ${playerName}`;
 
-  shuffleArray(videos); // Mezclar el orden de las preguntas
-
   showScreen(gameScreen);
-  loadVideo();
-});
-
-adVideo.addEventListener('play', () => {
-  if (!timerRunning) {
-    startTimer();
-  }
+  loadQuestion();
 });
 
 btnTrue.addEventListener('click', () => handleAnswer(true));
