@@ -1,4 +1,3 @@
-
 // Elementos DOM
 const startBtn = document.getElementById('start-btn');
 const playerNameInput = document.getElementById('player-name');
@@ -6,7 +5,6 @@ const nameScreen = document.getElementById('name-screen');
 const gameScreen = document.getElementById('game-screen');
 const endScreen = document.getElementById('end-screen');
 const playerDisplayName = document.getElementById('player-display-name');
-
 
 const adVideo = document.getElementById('ad-video');
 const adImage = document.getElementById('ad-image');
@@ -31,12 +29,20 @@ let timeLeft = 20;
 
 const TIMER_DURATION = 130;
 
-const videos = [
+let videos = [
   { src: 'videos/video1.mp4', correctAnswer: true, type: 'video' },
   { src: 'videos/video2.mp4', correctAnswer: false, type: 'video' },
   { src: 'videos/video3.mp4', correctAnswer: true, type: 'video' },
-  { src: 'images/final-image.jpg', correctAnswer: false, type: 'image' } // Última imagen
+  { src: 'images/final-image.jpg', correctAnswer: false, type: 'image' }
 ];
+
+// Función para mezclar un arreglo (Fisher-Yates)
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
 // Función para mostrar solo una pantalla
 function showScreen(screen) {
@@ -50,10 +56,9 @@ function showScreen(screen) {
 function loadVideo() {
   const currentMedia = videos[currentVideoIndex];
 
-  // Detener el video y ocultar el audio cuando se pasa a la imagen
   if (adVideo) {
     adVideo.pause();
-    adVideo.currentTime = 0; // Reiniciar al inicio del video
+    adVideo.currentTime = 0;
   }
 
   if (currentMedia.type === 'video') {
@@ -62,7 +67,6 @@ function loadVideo() {
     adImage.style.display = 'none';
     adVideo.load();
     adVideo.play();
-    // Esperar a que el video comience para iniciar el temporizador
     adVideo.onplay = () => {
       if (!timerRunning) {
         startTimer();
@@ -72,12 +76,11 @@ function loadVideo() {
     adImage.src = currentMedia.src;
     adImage.style.display = 'block';
     adVideo.style.display = 'none';
-    // Iniciar el temporizador después de que la imagen sea visible
     setTimeout(() => {
       if (!timerRunning) {
         startTimer();
       }
-    }, 500); // 500ms para asegurarse de que la imagen esté visible
+    }, 500);
   }
 
   resetTimer();
@@ -154,9 +157,8 @@ function showFinalScreen() {
   showScreen(endScreen);
   playerFinalName.textContent = playerName;
   finalScore.textContent = score;
-  updateLeaderboard(playerName, score); // Agrega el puntaje actual al leaderboard
+  updateLeaderboard(playerName, score);
 }
-
 
 // Manejar respuesta
 function handleAnswer(answer) {
@@ -166,14 +168,9 @@ function handleAnswer(answer) {
 
   const correct = videos[currentVideoIndex].correctAnswer === answer;
   if (correct) {
-    // Puntos base
     let points = 1;
-    
-    // Bonus según rapidez: entre 0 y 2 puntos extra
-    // (puedes ajustar la fórmula y el máximo)
     const bonus = Math.floor((timeLeft / TIMER_DURATION) * 2);
     points += bonus;
-
     score += points;
   }
 
@@ -186,7 +183,6 @@ function handleAnswer(answer) {
   }, 1200);
 }
 
-
 // Eventos
 
 startBtn.addEventListener('click', () => {
@@ -195,17 +191,19 @@ startBtn.addEventListener('click', () => {
     alert('Por favor ingresa tu nombre');
     return;
   }
+
   playerName = name;
   score = 0;
   currentVideoIndex = 0;
   scoreDisplay.textContent = `Puntaje: ${score}`;
   playerDisplayName.textContent = `Jugador: ${playerName}`;
 
+  shuffleArray(videos); // Mezclar el orden de las preguntas
+
   showScreen(gameScreen);
   loadVideo();
 });
 
-// Iniciar el temporizador solo cuando el video se reproduce
 adVideo.addEventListener('play', () => {
   if (!timerRunning) {
     startTimer();
@@ -219,17 +217,19 @@ playAgainBtn.addEventListener('click', () => {
   showScreen(nameScreen);
   playerNameInput.value = '';
 });
+
+// Leaderboard
 function updateLeaderboard(name, score) {
   const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
   leaderboard.push({ name, score });
 
-  // Ordena de mayor a menor puntaje y guarda máximo 5
   leaderboard.sort((a, b) => b.score - a.score);
   const top5 = leaderboard.slice(0, 5);
   localStorage.setItem('leaderboard', JSON.stringify(top5));
 
   renderLeaderboard(top5);
 }
+
 function renderLeaderboard(data) {
   const list = document.getElementById('leaderboard-list');
   list.innerHTML = '';
@@ -244,4 +244,3 @@ function renderLeaderboard(data) {
     list.appendChild(div);
   });
 }
-
