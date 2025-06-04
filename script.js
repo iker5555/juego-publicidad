@@ -19,6 +19,9 @@ const playAgainBtn = document.getElementById('play-again');
 
 const timerText = document.getElementById('timer-text');
 const timerProgress = document.getElementById('timer-progress');
+const soundCorrect = document.getElementById('sound-correct');
+const soundIncorrect = document.getElementById('sound-incorrect');
+const soundTimeout = document.getElementById('sound-timeout');
 
 let playerName = '';
 let score = 0;
@@ -111,6 +114,8 @@ function startTimer() {
       feedbackMessage.textContent = '⏰ Tiempo agotado';
       feedbackMessage.style.color = '#ff9800';
       feedbackMessage.classList.add('show');
+      soundTimeout.currentTime = 0;
+      soundTimeout.play();
 
       setTimeout(() => {
         feedbackMessage.classList.remove('show');
@@ -131,13 +136,18 @@ function resetTimer() {
 }
 
 // Mostrar feedback
+
 function feedback(correct) {
   if (correct) {
     feedbackMessage.textContent = '¡Correcto!';
     feedbackMessage.style.color = '#4caf50';
+    soundCorrect.currentTime = 0;
+    soundCorrect.play();
   } else {
     feedbackMessage.textContent = 'Incorrecto';
     feedbackMessage.style.color = '#f44336';
+    soundIncorrect.currentTime = 0;
+    soundIncorrect.play();
   }
   feedbackMessage.classList.add('show');
 }
