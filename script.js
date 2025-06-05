@@ -108,14 +108,19 @@ function startTimer() {
     timeLeft--;
     updateTimerVisual(timeLeft);
 
+    // Sonido de timeout 3 segundos antes de acabar
+    if (timeLeft === 3) {
+      soundTimeout.currentTime = 0;
+      soundTimeout.play();
+    }
+
     if (timeLeft <= 0) {
       clearInterval(timer);
       timerRunning = false;
       feedbackMessage.textContent = '⏰ Tiempo agotado';
       feedbackMessage.style.color = '#ff9800';
       feedbackMessage.classList.add('show');
-      soundTimeout.currentTime = 0;
-      soundTimeout.play();
+      
 
       setTimeout(() => {
         feedbackMessage.classList.remove('show');
@@ -231,8 +236,17 @@ playAgainBtn.addEventListener('click', () => {
 
 // Leaderboard
 function updateLeaderboard(name, score) {
-  const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-  leaderboard.push({ name, score });
+  let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+  // Buscar si el usuario ya existe
+  const existing = leaderboard.find(entry => entry.name === name);
+  if (existing) {
+    // Solo actualiza si el nuevo puntaje es mayor
+    if (score > existing.score) {
+      existing.score = score;
+    }
+  } else {
+    leaderboard.push({ name, score });
+  }
 
   leaderboard.sort((a, b) => b.score - a.score);
   const top5 = leaderboard.slice(0, 5);
