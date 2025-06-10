@@ -33,10 +33,30 @@ let timeLeft = 20;
 const TIMER_DURATION = 130;
 
 const originalQuestions = [
-  { src: 'videos/video1.mp4', correctAnswer: true, type: 'video' },
-  { src: 'videos/video2.mp4', correctAnswer: false, type: 'video' },
-  { src: 'videos/video3.mp4', correctAnswer: true, type: 'video' },
-  { src: 'images/final-image.jpg', correctAnswer: false, type: 'image' }
+  { 
+    src: 'videos/video1.mp4', 
+    correctAnswer: true, 
+    type: 'video',
+    explanation: 'Este anuncio es fiable porque presenta una promocion verificada.'
+  },
+  { 
+    src: 'videos/video2.mp4', 
+    correctAnswer: false, 
+    type: 'video',
+    explanation: 'Este anuncio es engañoso porque muestra un producto falso.'
+  },
+  { 
+    src: 'videos/video3.mp4', 
+    correctAnswer: true, 
+    type: 'video',
+    explanation: 'El anuncio muestra una promocion valida y verificada.'
+  },
+  { 
+    src: 'images/final-image.jpg', 
+    correctAnswer: false, 
+    type: 'image',
+    explanation: 'La imagen utiliza marketing engañoso.'
+  }
 ];
 
 let questions = [];
@@ -89,6 +109,7 @@ function loadQuestion() {
 
   resetTimer();
   feedbackMessage.textContent = '';
+  document.getElementById('explanation-message').textContent = '';
 }
 
 // Temporizador circular
@@ -143,6 +164,8 @@ function resetTimer() {
 // Mostrar feedback
 
 function feedback(correct) {
+  const explanationDiv = document.getElementById('explanation-message');
+  const currentMedia = questions[currentIndex];
   if (correct) {
     feedbackMessage.textContent = '¡Correcto!';
     feedbackMessage.style.color = '#4caf50';
@@ -155,6 +178,8 @@ function feedback(correct) {
     soundIncorrect.play();
   }
   feedbackMessage.classList.add('show');
+  // Mostrar explicación educativa
+  explanationDiv.textContent = currentMedia.explanation || '';
 }
 
 // Ir a la siguiente pregunta
