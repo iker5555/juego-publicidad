@@ -260,7 +260,7 @@ function handleAnswer(answer) {
   setTimeout(() => {
     feedbackMessage.classList.remove('show');
     nextQuestion();
-  }, 1200);
+  }, 4000);
 }
 
 // Eventos
