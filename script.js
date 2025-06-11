@@ -56,7 +56,14 @@ const originalQuestions = [
     correctAnswer: false, 
     type: 'image',
     explanation: 'La imagen utiliza marketing engañoso.'
+  },
+  {
+  src: 'videos/video4.mp4',
+  correctAnswer: false,
+  type: 'video',
+  explanation: 'este anuncio es falso porque muesra una descripcion engañosa del producto.'
   }
+  
 ];
 
 let questions = [];
