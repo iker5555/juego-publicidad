@@ -37,7 +37,7 @@ const originalQuestions = [
     src: 'videos/video1.mp4', 
     correctAnswer: true, 
     type: 'video',
-    explanation: 'Este anuncio es fiable porque presenta una promocion verificada.'
+    explanation: 'Este anuncio es fiable porque presenta una promoción verificada.'
   },
   { 
     src: 'videos/video2.mp4', 
@@ -49,7 +49,7 @@ const originalQuestions = [
     src: 'videos/video3.mp4', 
     correctAnswer: true, 
     type: 'video',
-    explanation: 'El anuncio muestra una promocion valida y verificada.'
+    explanation: 'El anuncio muestra una promoción valida y verificada.'
   },
   { 
     src: 'images/final-image.jpg', 
@@ -61,7 +61,31 @@ const originalQuestions = [
   src: 'videos/video4.mp4',
   correctAnswer: false,
   type: 'video',
-  explanation: 'este anuncio es falso porque muesra una descripcion engañosa del producto.'
+  explanation: 'Este anuncio es falso porque muestra una descripción engañosa del producto.'
+  },
+  {
+    src: 'videos/video5.mp4',
+    correctAnswer: true,
+    type: 'video',
+    explanation: 'Este anuncio es confiable porque muestra un producto real.'
+  },
+  {
+    src: 'videos/video6.mp4',
+    correctAnswer: true,
+    type: 'video',
+    explanation: 'Este producto es real.'
+  },
+  {
+  src: 'videos/video7.mp4',
+  correctAnswer: true,
+  type: 'video',
+  explanation: 'Este anuncio muestra un producto real y confiable.'
+  },
+  {
+    src: 'videos/video8.mp4',
+    correctAnswer: true,
+    type: 'video',
+    explanation: 'Este anuncio es confiable porque muestra un producto real y verificado.'
   }
   
 ];
